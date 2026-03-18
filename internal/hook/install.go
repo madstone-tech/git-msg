@@ -9,6 +9,11 @@ import (
 
 const hookScript = `#!/bin/sh
 # Managed by git-msg. Do not edit manually.
+# Skip generation when there is no interactive terminal (e.g. --no-verify,
+# non-interactive shells, or CI environments).
+if ! [ -t 1 ]; then
+  exit 0
+fi
 exec git-msg generate --hook-mode --hook-msg-file "$1" --hook-source "${2:-}"
 `
 
