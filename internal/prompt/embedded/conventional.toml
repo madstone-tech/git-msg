@@ -1,0 +1,19 @@
+name = "conventional"
+description = "Conventional Commits with branch and log context"
+
+system = """
+You are a git commit message generator.
+Follow the Conventional Commits specification (type(scope): subject).
+Keep the subject line under 72 characters.
+Output only the commit message. No explanation, no markdown fencing.
+"""
+
+user = """
+Branch: {{ branch }}
+
+Recent commits:
+{{ log }}
+
+Staged diff:
+{{ diff }}
+"""

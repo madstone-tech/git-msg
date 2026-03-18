@@ -1,0 +1,160 @@
+# GoReleaser configuration for git-msg
+# https://goreleaser.com
+
+version: 2
+
+project_name: git-msg
+
+env:
+  - GO111MODULE=on
+
+git:
+  tag_sort: -version:refname
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: git-msg
+    binary: git-msg
+    main: .
+    # v1: macOS and Linux only — Windows excluded (keychain non-goal, see constitution §VI)
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+      - -X main.Version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+      - -X main.builtBy=goreleaser
+    env:
+      - CGO_ENABLED=0
+
+# Universal binary for macOS (amd64 + arm64 combined)
+universal_binaries:
+  - id: git-msg_universal
+    replace: true
+    name_template: git-msg
+
+archives:
+  - id: default
+    formats: [tar.gz]
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    files:
+      - README.md
+      - LICENSE*
+      - CHANGELOG*
+
+checksum:
+  name_template: checksums.txt
+  algorithm: sha256
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+      - "^chore:"
+      - "^style:"
+      - "merge conflict"
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+  groups:
+    - title: "New Features"
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 0
+    - title: "Bug Fixes"
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 1
+    - title: "Enhancements"
+      regexp: "^.*enhance[(\\w)]*:+.*$"
+      order: 2
+    - title: "Performance Improvements"
+      regexp: "^.*perf[(\\w)]*:+.*$"
+      order: 3
+    - title: "Refactoring"
+      regexp: "^.*refactor[(\\w)]*:+.*$"
+      order: 4
+    - title: "Other"
+      order: 999
+
+release:
+  github:
+    owner: madstone-tech
+    name: git-msg
+  draft: false
+  prerelease: auto
+  mode: replace
+  header: |
+    ## git-msg {{ .Tag }}
+
+    AI-assisted git commit message generator with multi-provider LLM support.
+
+    ### Installation
+
+    ```bash
+    # Download the binary for your platform from the assets below
+    tar -xzf git-msg_*.tar.gz
+    sudo mv git-msg /usr/local/bin/
+
+    # Or using Go
+    go install github.com/madstone-tech/git-msg@{{ .Tag }}
+
+    # Or using Homebrew
+    brew tap madstone-tech/tap
+    brew install git-msg
+    ```
+
+    ### First run
+
+    ```bash
+    git-msg generate --dry-run
+    ```
+
+    Config is stored at `~/.config/mdstn/git-msg/config.toml`.
+
+  footer: |
+    **Full Changelog**: https://github.com/madstone-tech/git-msg/compare/{{ .PreviousTag }}...{{ .Tag }}
+
+    **Checksums**: {{ .Tag }}/checksums.txt
+
+homebrew_casks:
+  - repository:
+      owner: madstone-tech
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
+    directory: Casks
+    homepage: "https://github.com/madstone-tech/git-msg"
+    description: "AI-assisted git commit message generator with multi-provider LLM support"
+    license: "MIT"
+    url:
+      verified: "github.com/madstone-tech/git-msg"
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/git-msg"]
+          end
+
+announce:
+  skip: true

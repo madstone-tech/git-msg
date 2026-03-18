@@ -1,0 +1,117 @@
+package hook_test
+
+import (
+	"context"
+	"os"
+	"path/filepath"
+	"testing"
+
+	"github.com/madstone-tech/git-msg/internal/hook"
+)
+
+// noopGitConfig satisfies hook.GitConfigReader for tests that only exercise
+// local (non-global) hook paths.
+type noopGitConfig struct{}
+
+func (noopGitConfig) RunConfig(_ context.Context, _ string) (string, error) { return "", nil }
+
+func TestFileManager_Install(t *testing.T) {
+	dir := t.TempDir()
+	hooksDir := filepath.Join(dir, ".git", "hooks")
+	os.MkdirAll(hooksDir, 0755)
+
+	mgr := hook.NewFileManager(dir, noopGitConfig{})
+	if err := mgr.Install(false); err != nil {
+		t.Fatal(err)
+	}
+
+	hookPath := filepath.Join(hooksDir, "prepare-commit-msg")
+	info, err := os.Stat(hookPath)
+	if err != nil {
+		t.Fatalf("hook file not created: %v", err)
+	}
+	if info.Mode()&0100 == 0 {
+		t.Error("hook file is not executable")
+	}
+}
+
+func TestFileManager_Install_Idempotent(t *testing.T) {
+	dir := t.TempDir()
+	os.MkdirAll(filepath.Join(dir, ".git", "hooks"), 0755)
+	mgr := hook.NewFileManager(dir, noopGitConfig{})
+	if err := mgr.Install(false); err != nil {
+		t.Fatal(err)
+	}
+	if err := mgr.Install(false); err != nil {
+		t.Fatalf("second install failed: %v", err)
+	}
+}
+
+func TestFileManager_Uninstall(t *testing.T) {
+	dir := t.TempDir()
+	os.MkdirAll(filepath.Join(dir, ".git", "hooks"), 0755)
+	mgr := hook.NewFileManager(dir, noopGitConfig{})
+	_ = mgr.Install(false)
+	if err := mgr.Uninstall(false); err != nil {
+		t.Fatal(err)
+	}
+	_, err := os.Stat(filepath.Join(dir, ".git", "hooks", "prepare-commit-msg"))
+	if !os.IsNotExist(err) {
+		t.Error("hook file still exists after uninstall")
+	}
+}
+
+func TestFileManager_Uninstall_NotPresent(t *testing.T) {
+	dir := t.TempDir()
+	os.MkdirAll(filepath.Join(dir, ".git", "hooks"), 0755)
+	mgr := hook.NewFileManager(dir, noopGitConfig{})
+	if err := mgr.Uninstall(false); err != nil {
+		t.Fatalf("uninstall on absent hook failed: %v", err)
+	}
+}
+
+func TestFileManager_Install_ScriptContent(t *testing.T) {
+	dir := t.TempDir()
+	os.MkdirAll(filepath.Join(dir, ".git", "hooks"), 0755)
+
+	mgr := hook.NewFileManager(dir, noopGitConfig{})
+	if err := mgr.Install(false); err != nil {
+		t.Fatal(err)
+	}
+
+	hookPath := filepath.Join(dir, ".git", "hooks", "prepare-commit-msg")
+	data, err := os.ReadFile(hookPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if string(data) != hook.HookScript {
+		t.Errorf("hook script content mismatch\ngot:\n%s\nwant:\n%s", data, hook.HookScript)
+	}
+
+	// Guard: stdin TTY check must be present and use fd 0, not fd 1.
+	content := string(data)
+	if !contains(content, "[ -t 0 ]") {
+		t.Error("hook script must check stdin TTY with '-t 0', not '-t 1'")
+	}
+	if contains(content, "[ -t 1 ]") {
+		t.Error("hook script must not check stdout TTY '-t 1' (use stdin '-t 0')")
+	}
+	// Exec line must be present.
+	if !contains(content, "exec git-msg generate --hook-mode") {
+		t.Error("hook script missing exec line")
+	}
+}
+
+func contains(s, sub string) bool {
+	return len(s) >= len(sub) && (s == sub || len(s) > 0 && containsStr(s, sub))
+}
+
+func containsStr(s, sub string) bool {
+	for i := 0; i <= len(s)-len(sub); i++ {
+		if s[i:i+len(sub)] == sub {
+			return true
+		}
+	}
+	return false
+}

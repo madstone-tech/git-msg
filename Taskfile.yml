@@ -1,0 +1,102 @@
+version: "3"
+
+vars:
+  BINARY: bin/git-msg
+  VERSION:
+    sh: git describe --tags --always --dirty 2>/dev/null || echo dev
+  BUILD_TIME:
+    sh: date -u '+%Y-%m-%d_%H:%M:%S'
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+    silent: true
+
+  build:
+    desc: Compile the binary to bin/git-msg
+    deps: [clean]
+    cmds:
+      - mkdir -p bin
+      - go build -ldflags "-X main.Version={{.VERSION}} -X main.date={{.BUILD_TIME}}" -o {{.BINARY}} .
+
+  test:
+    desc: Run the full test suite with the race detector
+    cmds:
+      - go test ./... -race -count=1
+
+  test-verbose:
+    desc: Run tests with verbose output
+    cmds:
+      - go test -v ./... -race -count=1
+
+  coverage:
+    desc: Run tests and open HTML coverage report
+    cmds:
+      - go test -race -coverprofile=coverage.out -covermode=atomic ./...
+      - go tool cover -html=coverage.out -o coverage.html
+      - open coverage.html
+
+  lint:
+    desc: Run golangci-lint
+    cmds:
+      - golangci-lint run
+
+  fmt:
+    desc: Format all Go source files
+    cmds:
+      - go fmt ./...
+
+  vet:
+    desc: Run go vet
+    cmds:
+      - go vet ./...
+
+  constitution:
+    desc: Run the constitution audit (Principles II + VII)
+    cmds:
+      - bash scripts/audit-constitution.sh
+
+  clean:
+    desc: Remove build artifacts
+    cmds:
+      - rm -rf bin/
+      - rm -f coverage.out coverage.html
+
+  install:
+    desc: Install git-msg to GOPATH/bin
+    cmds:
+      - go install -ldflags "-X main.Version={{.VERSION}}" .
+
+  deps:
+    desc: Download and tidy dependencies
+    cmds:
+      - go mod download
+      - go mod tidy
+
+  tools:
+    desc: Install development tools (golangci-lint, goreleaser)
+    cmds:
+      - go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.11.3
+      - go install github.com/goreleaser/goreleaser@latest
+
+  ci:
+    desc: Run all CI checks locally (fmt, vet, lint, constitution, test, build)
+    cmds:
+      - task: fmt
+      - task: vet
+      - task: lint
+      - task: constitution
+      - task: test
+      - task: build
+
+  release-snapshot:
+    desc: Create a local snapshot release via GoReleaser (no publish)
+    cmds:
+      - goreleaser release --snapshot --clean
+
+  release:
+    desc: Publish a release via GoReleaser (requires a vX.Y.Z tag)
+    cmds:
+      - goreleaser release --clean

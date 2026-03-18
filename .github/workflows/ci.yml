@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+
+      - name: Go mod tidy
+        run: go mod tidy
+
+      - name: Go mod verify
+        run: go mod verify
+
+      - name: Run tests
+        run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.txt
+          fail_ci_if_error: false
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+
+      - name: Build
+        run: go build -v .
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v7
+        with:
+          version: v2.11.3
+
+  constitution:
+    name: Constitution Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run constitution audit
+        run: |
+          chmod +x scripts/audit-constitution.sh
+          ./scripts/audit-constitution.sh
+        continue-on-error: true
+
+      - name: Enforce constitution (fail on violations)
+        run: |
+          if ./scripts/audit-constitution.sh; then
+            echo "✅ All packages comply with the constitution"
+            exit 0
+          else
+            echo "❌ Constitution violations detected — see output above"
+            echo "   Principle II:  cmd/*.go Run() must not import cobra"
+            echo "   Principle VII: internal/ui must not import internal/*"
+            echo "   Principle VII: internal/llm must not import internal/config or internal/secret"
+            echo "   Principle VII: internal/hook must not call exec.Command directly"
+            echo "   Paths:         no package outside internal/dirs may call os.UserConfigDir()"
+            exit 1
+          fi
