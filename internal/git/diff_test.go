@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/madstone0-0/git-msg/internal/git"
+	"github.com/madstone-tech/git-msg/internal/git"
 )
 
 func TestFakeClient_StagedDiff_Empty(t *testing.T) {

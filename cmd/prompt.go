@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/madstone0-0/git-msg/internal/prompt"
-	"github.com/madstone0-0/git-msg/internal/ui"
+	"github.com/madstone-tech/git-msg/internal/prompt"
+	"github.com/madstone-tech/git-msg/internal/ui"
 )
 
 // ListPrompts prints all available templates with their source.

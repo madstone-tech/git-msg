@@ -55,8 +55,8 @@ echo ""
 echo "Principle VII: internal/ui has no internal/* imports"
 
 while IFS= read -r -d '' file; do
-	if grep -qE '"github.com/madstone0-0/git-msg/internal/(config|secret|git|llm|prompt|hook|dirs)"' "$file"; then
-		IMPORT=$(grep -E '"github.com/madstone0-0/git-msg/internal/' "$file" | head -1 | xargs)
+	if grep -qE '"github.com/madstone-tech/git-msg/internal/(config|secret|git|llm|prompt|hook|dirs)"' "$file"; then
+		IMPORT=$(grep -E '"github.com/madstone-tech/git-msg/internal/' "$file" | head -1 | xargs)
 		fail "internal/ui imports another internal package: $file" \
 			"Found: $IMPORT" \
 			"ui must return plain values. Persistence belongs in cmd/root.go:EnsureConfig."
@@ -73,8 +73,8 @@ echo ""
 echo "Principle VII: internal/llm has no config/secret imports"
 
 while IFS= read -r -d '' file; do
-	if grep -qE '"github.com/madstone0-0/git-msg/internal/(config|secret)"' "$file"; then
-		IMPORT=$(grep -E '"github.com/madstone0-0/git-msg/internal/(config|secret)"' "$file" | head -1 | xargs)
+	if grep -qE '"github.com/madstone-tech/git-msg/internal/(config|secret)"' "$file"; then
+		IMPORT=$(grep -E '"github.com/madstone-tech/git-msg/internal/(config|secret)"' "$file" | head -1 | xargs)
 		fail "internal/llm imports config or secret: $file" \
 			"Found: $IMPORT" \
 			"Provider construction belongs in cmd/llm.go:NewLLMProvider, not in the llm package."

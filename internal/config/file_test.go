@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/madstone0-0/git-msg/internal/config"
+	"github.com/madstone-tech/git-msg/internal/config"
 )
 
 func newTestFileStore(t *testing.T) *config.FileStore {

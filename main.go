@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/madstone0-0/git-msg/cmd"
+	"github.com/madstone-tech/git-msg/cmd"
 )
 
 func main() {

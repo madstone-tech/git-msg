@@ -1,4 +1,4 @@
-module github.com/madstone0-0/git-msg
+module github.com/madstone-tech/git-msg
 
 go 1.26.1
 

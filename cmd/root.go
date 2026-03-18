@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/madstone0-0/git-msg/internal/config"
-	"github.com/madstone0-0/git-msg/internal/secret"
-	"github.com/madstone0-0/git-msg/internal/ui"
+	"github.com/madstone-tech/git-msg/internal/config"
+	"github.com/madstone-tech/git-msg/internal/secret"
+	"github.com/madstone-tech/git-msg/internal/ui"
 )
 
 // Version is set at build time via -ldflags "-X main.Version=vX.Y.Z".

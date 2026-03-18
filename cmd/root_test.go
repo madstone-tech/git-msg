@@ -5,9 +5,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/madstone0-0/git-msg/cmd"
-	"github.com/madstone0-0/git-msg/internal/config"
-	"github.com/madstone0-0/git-msg/internal/secret"
+	"github.com/madstone-tech/git-msg/cmd"
+	"github.com/madstone-tech/git-msg/internal/config"
+	"github.com/madstone-tech/git-msg/internal/secret"
 )
 
 func TestEnsureConfig_ExistingConfig(t *testing.T) {

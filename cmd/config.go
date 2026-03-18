@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/madstone0-0/git-msg/internal/config"
+	"github.com/madstone-tech/git-msg/internal/config"
 )
 
 // ErrUnknownConfigKey is returned for unrecognized dot-delimited config keys.

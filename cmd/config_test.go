@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/madstone0-0/git-msg/cmd"
-	"github.com/madstone0-0/git-msg/internal/config"
+	"github.com/madstone-tech/git-msg/cmd"
+	"github.com/madstone-tech/git-msg/internal/config"
 )
 
 func TestSetConfig_ProviderName(t *testing.T) {

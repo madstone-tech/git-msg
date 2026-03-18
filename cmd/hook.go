@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/madstone0-0/git-msg/internal/hook"
+	"github.com/madstone-tech/git-msg/internal/hook"
 )
 
 // HookOptions holds inputs for hook install/uninstall commands.

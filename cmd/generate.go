@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/madstone0-0/git-msg/internal/config"
-	"github.com/madstone0-0/git-msg/internal/git"
-	"github.com/madstone0-0/git-msg/internal/hook"
-	"github.com/madstone0-0/git-msg/internal/llm"
-	"github.com/madstone0-0/git-msg/internal/prompt"
-	"github.com/madstone0-0/git-msg/internal/secret"
-	"github.com/madstone0-0/git-msg/internal/ui"
+	"github.com/madstone-tech/git-msg/internal/config"
+	"github.com/madstone-tech/git-msg/internal/git"
+	"github.com/madstone-tech/git-msg/internal/hook"
+	"github.com/madstone-tech/git-msg/internal/llm"
+	"github.com/madstone-tech/git-msg/internal/prompt"
+	"github.com/madstone-tech/git-msg/internal/secret"
+	"github.com/madstone-tech/git-msg/internal/ui"
 )
 
 // GenerateOptions holds all inputs for the generate command.

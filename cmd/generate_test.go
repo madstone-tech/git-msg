@@ -5,12 +5,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/madstone0-0/git-msg/cmd"
-	"github.com/madstone0-0/git-msg/internal/config"
-	"github.com/madstone0-0/git-msg/internal/git"
-	"github.com/madstone0-0/git-msg/internal/llm"
-	"github.com/madstone0-0/git-msg/internal/prompt"
-	"github.com/madstone0-0/git-msg/internal/ui"
+	"github.com/madstone-tech/git-msg/cmd"
+	"github.com/madstone-tech/git-msg/internal/config"
+	"github.com/madstone-tech/git-msg/internal/git"
+	"github.com/madstone-tech/git-msg/internal/llm"
+	"github.com/madstone-tech/git-msg/internal/prompt"
+	"github.com/madstone-tech/git-msg/internal/ui"
 )
 
 func defaultOpts() cmd.GenerateOptions {

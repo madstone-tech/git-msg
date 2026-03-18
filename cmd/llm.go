@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/madstone0-0/git-msg/internal/config"
-	"github.com/madstone0-0/git-msg/internal/llm"
-	"github.com/madstone0-0/git-msg/internal/secret"
+	"github.com/madstone-tech/git-msg/internal/config"
+	"github.com/madstone-tech/git-msg/internal/llm"
+	"github.com/madstone-tech/git-msg/internal/secret"
 )
 
 // NewLLMProvider constructs the appropriate llm.Provider from config and

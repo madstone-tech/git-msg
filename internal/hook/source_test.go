@@ -3,7 +3,7 @@ package hook_test
 import (
 	"testing"
 
-	"github.com/madstone0-0/git-msg/internal/hook"
+	"github.com/madstone-tech/git-msg/internal/hook"
 )
 
 func TestShouldGenerate(t *testing.T) {

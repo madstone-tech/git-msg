@@ -27,3 +27,8 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Internal development tooling (local only)
+.opencode/
+.specify/
+specs/

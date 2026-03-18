@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/madstone0-0/git-msg/internal/llm"
+	"github.com/madstone-tech/git-msg/internal/llm"
 )
 
 func TestOllamaProvider_Success(t *testing.T) {

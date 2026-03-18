@@ -3,7 +3,7 @@ package ui_test
 import (
 	"testing"
 
-	"github.com/madstone0-0/git-msg/internal/ui"
+	"github.com/madstone-tech/git-msg/internal/ui"
 )
 
 func TestDefaultModelFor(t *testing.T) {

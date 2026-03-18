@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/madstone0-0/git-msg/internal/config"
+	"github.com/madstone-tech/git-msg/internal/config"
 	"github.com/spf13/cobra"
 )
 

@@ -8,7 +8,7 @@ import (
 
 	toml "github.com/pelletier/go-toml/v2"
 
-	"github.com/madstone0-0/git-msg/internal/dirs"
+	"github.com/madstone-tech/git-msg/internal/dirs"
 )
 
 // FileStore implements TemplateStore with user overrides at

@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/madstone0-0/git-msg/internal/secret"
+	"github.com/madstone-tech/git-msg/internal/secret"
 )
 
 func TestFakeStore_EnvVarFallback(t *testing.T) {

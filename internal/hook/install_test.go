@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/madstone0-0/git-msg/internal/hook"
+	"github.com/madstone-tech/git-msg/internal/hook"
 )
 
 // noopGitConfig satisfies hook.GitConfigReader for tests that only exercise

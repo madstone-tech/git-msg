@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/madstone0-0/git-msg/cmd"
-	"github.com/madstone0-0/git-msg/internal/hook"
+	"github.com/madstone-tech/git-msg/cmd"
+	"github.com/madstone-tech/git-msg/internal/hook"
 )
 
 func TestInstallHook(t *testing.T) {

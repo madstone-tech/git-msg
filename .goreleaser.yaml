@@ -118,7 +118,7 @@ release:
     sudo mv git-msg /usr/local/bin/
 
     # Or using Go
-    go install github.com/madstone0-0/git-msg@{{ .Tag }}
+    go install github.com/madstone-tech/git-msg@{{ .Tag }}
 
     # Or using Homebrew
     brew tap madstone-tech/tap
