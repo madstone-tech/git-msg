@@ -39,9 +39,9 @@ git-msg hook install --global
 ```sh
 #!/bin/sh
 # Managed by git-msg. Do not edit manually.
-# Skip generation when there is no interactive terminal (e.g. --no-verify,
-# non-interactive shells, or CI environments).
-if ! [ -t 1 ]; then
+# Skip generation when stdin is not an interactive terminal (e.g. CI,
+# editor integrations, or any non-interactive shell environment).
+if ! [ -t 0 ]; then
   exit 0
 fi
 exec git-msg generate --hook-mode --hook-msg-file "$1" --hook-source "${2:-}"
@@ -49,9 +49,10 @@ exec git-msg generate --hook-mode --hook-msg-file "$1" --hook-source "${2:-}"
 
 Key behaviours:
 
-- **No TTY, no generation** — the script exits silently when `stdout` is not
-  an interactive terminal. This prevents the hook from blocking in CI, editor
-  integrations, or `--no-verify` flows.
+- **No TTY, no generation** — the script checks whether `stdin` is an
+  interactive terminal (`-t 0`). The review TUI requires an interactive stdin
+  to read user input, so the hook exits silently when one is not available
+  (CI pipelines, editor integrations, non-interactive shells).
 - **Hook mode** — `git-msg` writes the generated message to the commit message
   file that git passes as `$1`, instead of calling `git commit -m` itself.
 - **Source-aware** — the `$2` argument from git tells `git-msg` what triggered

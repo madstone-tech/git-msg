@@ -7,15 +7,19 @@ import (
 	"path/filepath"
 )
 
-const hookScript = `#!/bin/sh
+// HookScript is the canonical prepare-commit-msg script written by Install.
+// Exported so tests can assert the installed file matches exactly.
+const HookScript = `#!/bin/sh
 # Managed by git-msg. Do not edit manually.
-# Skip generation when there is no interactive terminal (e.g. --no-verify,
-# non-interactive shells, or CI environments).
-if ! [ -t 1 ]; then
+# Skip generation when stdin is not an interactive terminal (e.g. CI,
+# editor integrations, or any non-interactive shell environment).
+if ! [ -t 0 ]; then
   exit 0
 fi
 exec git-msg generate --hook-mode --hook-msg-file "$1" --hook-source "${2:-}"
 `
+
+const hookScript = HookScript
 
 // GitConfigReader is a narrow interface for reading a single git config value.
 // Satisfied by git.Client so the full client can be injected, but the hook
