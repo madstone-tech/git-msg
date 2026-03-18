@@ -31,7 +31,32 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+Verify compliance with `.specify/memory/constitution.md` (v1.1.0) before proceeding:
+
+- [ ] **I. Multi-Provider Abstraction** — New LLM interaction goes through
+  `llm.Provider`; construction via `cmd/llm.go:NewLLMProvider` only;
+  no SDK imports anywhere.
+- [ ] **II. Cobra Double-File** — `cmd/<cmd>.go` contains only `Run(ctx, opts)`
+  with zero construction, zero direct I/O, zero Cobra imports.
+  `cmd/<cmd>_cobra.go` constructs all deps and calls `Run`.
+  I/O behaviours (spinner, review) are injected via opts fields.
+- [ ] **III. Interface-Driven Packages** — New behaviour exposed via interface;
+  `Marshal`/`Unmarshal`/`Format`/`RepoRoot` patterns followed where relevant.
+- [ ] **IV. Test-First** — Unit tests with fakes before implementation;
+  `go test ./... -race -count=1` passes fully offline.
+- [ ] **V. Secure Credentials** — No API keys in config, source, logs, or output;
+  keychain → env-var lookup order respected.
+- [ ] **VI. v1 Non-Goals respected** — Feature does not add diff chunking,
+  git-add-p, shared prompt server, Windows support, or i18n.
+- [ ] **VII. Clean Architecture** — Dependency direction is inward only.
+  `internal/ui` has no `internal/` imports. `internal/llm` has no
+  `config`/`secret` imports. New infrastructure types are not constructed
+  inside `Run()`. Narrow interfaces used where a full type is not needed.
+- [ ] **Paths via internal/dirs** — Any new config/data path uses
+  `dirs.ConfigRoot()` or a new function in `internal/dirs`; no direct
+  `os.UserConfigDir()` or hardcoded paths.
+- [ ] **Dependency policy** — No new external packages without a constitution
+  amendment; `go-toml` confined to `internal/` packages.
 
 ## Project Structure
 

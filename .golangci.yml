@@ -1,0 +1,25 @@
+# golangci-lint configuration (v2)
+version: "2"
+
+run:
+  timeout: 5m
+  go: "1.26"
+  tests: false
+
+linters:
+  enable:
+    - govet
+    - staticcheck
+    - errcheck
+    - ineffassign
+    - unused
+    - misspell
+  disable:
+    - exhaustive
+    - exhaustruct
+    - varnamelen
+    - revive
+
+formatters:
+  enable:
+    - gofmt

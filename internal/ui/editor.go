@@ -19,14 +19,18 @@ func OpenInEditor(content string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer os.Remove(f.Name())
+	name := f.Name()
+	defer func() { _ = os.Remove(name) }()
+
 	if _, err := f.WriteString(content); err != nil {
-		f.Close()
+		_ = f.Close()
 		return "", err
 	}
-	f.Close()
+	if err := f.Close(); err != nil {
+		return "", err
+	}
 
-	cmd := exec.Command(editor, f.Name())
+	cmd := exec.Command(editor, name)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -34,7 +38,7 @@ func OpenInEditor(content string) (string, error) {
 		return "", err
 	}
 
-	data, err := os.ReadFile(f.Name())
+	data, err := os.ReadFile(name)
 	if err != nil {
 		return "", err
 	}
