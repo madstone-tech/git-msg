@@ -1,0 +1,39 @@
+version: "3"
+
+vars:
+  BINARY: bin/git-msg
+  VERSION:
+    sh: git describe --tags --always 2>/dev/null || echo dev
+
+tasks:
+  build:
+    desc: Compile the binary to bin/git-msg
+    deps: [clean]
+    cmds:
+      - mkdir -p bin
+      - go build -ldflags "-X main.Version={{.VERSION}}" -o {{.BINARY}} .
+
+  test:
+    desc: Run the full test suite with the race detector
+    cmds:
+      - go test ./... -race -count=1
+
+  lint:
+    desc: Run golangci-lint
+    cmds:
+      - golangci-lint run
+
+  clean:
+    desc: Remove build artifacts (bin/)
+    cmds:
+      - rm -rf bin/
+
+  install:
+    desc: Install git-msg to GOPATH/bin
+    cmds:
+      - go install -ldflags "-X main.Version={{.VERSION}}" .
+
+  default:
+    desc: Build (default task)
+    cmds:
+      - task: build

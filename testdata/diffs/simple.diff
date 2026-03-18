@@ -1,0 +1,30 @@
+diff --git a/internal/config/config.go b/internal/config/config.go
+index 1234567..abcdefg 100644
+--- a/internal/config/config.go
++++ b/internal/config/config.go
+@@ -1,10 +1,20 @@
+ package config
+ 
++import "errors"
++
+ type Config struct {
+-	Provider string
++	Provider ProviderConfig `toml:"provider"`
++	Ollama   OllamaConfig   `toml:"ollama"`
++	Prompt   PromptConfig   `toml:"prompt"`
++	Hook     HookConfig     `toml:"hook"`
+ }
+ 
+-func DefaultConfig() Config {
+-	return Config{Provider: "anthropic"}
++type ProviderConfig struct {
++	Name  string `toml:"name"`
++	Model string `toml:"model"`
++}
++
++// DefaultConfig returns sensible defaults.
++func DefaultConfig() Config {
++	return Config{
++		Provider: ProviderConfig{Name: "anthropic", Model: "claude-haiku-4-5"},
++	}
+ }
