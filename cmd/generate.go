@@ -110,6 +110,7 @@ func Run(ctx context.Context, opts GenerateOptions) error {
 	if err != nil {
 		return fmt.Errorf("LLM request failed\n  → %w", err)
 	}
+	rawMessage = llm.CleanResponse(rawMessage)
 	if rawMessage == "" {
 		return fmt.Errorf("LLM returned an empty message\n  → try again or switch provider")
 	}
