@@ -30,10 +30,10 @@ builds:
       - -trimpath
     ldflags:
       - -s -w
-      - -X main.Version={{.Version}}
-      - -X main.commit={{.Commit}}
-      - -X main.date={{.Date}}
-      - -X main.builtBy=goreleaser
+      - -X github.com/madstone-tech/git-msg/cmd.Version={{.Version}}
+      - -X github.com/madstone-tech/git-msg/cmd.Commit={{.Commit}}
+      - -X github.com/madstone-tech/git-msg/cmd.Date={{.Date}}
+      - -X github.com/madstone-tech/git-msg/cmd.BuiltBy=goreleaser
     env:
       - CGO_ENABLED=0
 

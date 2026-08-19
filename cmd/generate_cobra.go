@@ -46,6 +46,24 @@ func NewGenerateCmd() *cobra.Command {
 	_ = cmd.Flags().MarkHidden("hook-mode")
 	_ = cmd.Flags().MarkHidden("hook-msg-file")
 	_ = cmd.Flags().MarkHidden("hook-source")
+	_ = cmd.RegisterFlagCompletionFunc("provider", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{"openai", "anthropic", "gemini", "ollama"}, cobra.ShellCompDirectiveNoFileComp
+	})
+	_ = cmd.RegisterFlagCompletionFunc("template", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		store, err := prompt.NewFileStore()
+		if err != nil {
+			return nil, cobra.ShellCompDirectiveError
+		}
+		entries, err := store.List()
+		if err != nil {
+			return nil, cobra.ShellCompDirectiveError
+		}
+		var names []string
+		for _, e := range entries {
+			names = append(names, e.Name)
+		}
+		return names, cobra.ShellCompDirectiveNoFileComp
+	})
 
 	return cmd
 }
