@@ -12,10 +12,10 @@ import (
 
 // Version is set at build time via -ldflags "-X main.Version=vX.Y.Z".
 var (
-	Version  = "dev"
-	Commit   = "none"
-	Date     = "unknown"
-	BuiltBy  = "unknown"
+	Version = "dev"
+	Commit  = "none"
+	Date    = "unknown"
+	BuiltBy = "unknown"
 )
 
 // contextKey is an unexported type for context keys in this package.

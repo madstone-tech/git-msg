@@ -10,7 +10,7 @@ var (
 	fenceRegex = regexp.MustCompile("(?s)```(?:[a-z]*\\n)?(.*?)\\n?```")
 
 	// fillerRegex matches common conversational prefixes LLMs use.
-	fillerRegex = regexp.MustCompile("(?i)^(?:here is (?:the|your)? (?:generated )?commit message|suggested commit message|the commit message is|commit message|generated message):?\\s*")
+	fillerRegex = regexp.MustCompile(`(?i)^(?:here is (?:the|your)? (?:generated )?commit message|suggested commit message|the commit message is|commit message|generated message):?\s*`)
 )
 
 // CleanResponse removes common LLM conversational filler and markdown fencing
