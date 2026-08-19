@@ -46,6 +46,7 @@ func newRootCmd(cfgStore config.Store, secrets secret.SecretStore) *cobra.Comman
 		NewConfigCmd(cfgStore),
 		NewPromptCmd(),
 		NewHookCmd(),
+		NewVersionCmd(),
 	)
 
 	return root
