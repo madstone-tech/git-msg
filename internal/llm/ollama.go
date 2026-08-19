@@ -41,6 +41,9 @@ func (p *OllamaProvider) Generate(ctx context.Context, system, user string) (str
 	}
 	payload := map[string]interface{}{
 		"model": p.model,
+		"options": map[string]interface{}{
+			"temperature": 0,
+		},
 		"messages": []map[string]string{
 			{"role": "system", "content": system},
 			{"role": "user", "content": user},

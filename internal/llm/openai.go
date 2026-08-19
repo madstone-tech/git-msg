@@ -41,6 +41,7 @@ func NewOpenAIProviderWithEndpoint(model, apiKey, endpoint string) *OpenAIProvid
 func (p *OpenAIProvider) Generate(ctx context.Context, system, user string) (string, error) {
 	payload := map[string]interface{}{
 		"model": p.model,
+		"temperature": 0,
 		"messages": []map[string]string{
 			{"role": "system", "content": system},
 			{"role": "user", "content": user},
